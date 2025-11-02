@@ -33,6 +33,11 @@ def get_info(url):
     else:
         print(info.stderr)
         return None 
+
+def format_filesize(size_bytes):
+    if not size_bytes or size_bytes == 0:
+        return "unknown"
+    return f"{size_bytes / (1024*1024):.1f} MB"
     
 def download_video(url):
     video_ext = ["webm", "mp4", "mkv", "mov"]
@@ -148,8 +153,3 @@ def download_video(url):
 
 def download_audio():
     print("Not Implemented yet") 
-
-def format_filesize(size_bytes):
-    if not size_bytes or size_bytes == 0:
-        return "unknown"
-    return f"{size_bytes / (1024*1024):.1f} MB"
