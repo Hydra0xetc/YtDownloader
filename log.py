@@ -69,3 +69,18 @@ def print_success(message: Any) -> None:
         message: The variable to be included in the [SUCCESS] message.
     """
     print(f"{GREEN}{BOLD}[SUCCESS] {RESET}{message}")
+
+def print_red(message: Any) -> None:
+    print(f"{RED}{BOLD}{message}{RESET}")
+
+def print_green(message: Any) -> None:
+    print(f"{GREEN}{BOLD}{message}{RESET}")
+
+def print_yellow(message: Any) -> None:
+    print(f"{YELLOW}{BOLD}{message}{RESET}")
+
+def print_cyan(message: Any) -> None:
+    print(f"{CYAN}{BOLD}{message}{RESET}")
+
+def print_magenta(message: Any) -> None:
+    print(f"{MAGENTA}{BOLD}{message}{RESET}")

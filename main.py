@@ -16,6 +16,7 @@ def is_valid_youtube_url(url: str) -> bool:
         r"[A-Za-z0-9_-]+"
         r"([?&][A-Za-z0-9_=-]+)*$"
     )
+
     return re.match(pattern, url) is not None
 
 def main():
@@ -35,7 +36,7 @@ def main():
 
             if user_input == 1:
                 while True:
-                    input_video_url = str(input("Enter url (or 0 to cancel): "))
+                    input_video_url = str(input("Enter video url (or 0 to cancel): "))
                     if is_valid_youtube_url(input_video_url):
                         download_video(input_video_url)
                     elif input_video_url == "0":
@@ -44,7 +45,15 @@ def main():
                         print_error("Invalid youtube url")
 
             elif user_input == 2:
-                download_audio()
+                while True:
+                    input_audio_url = str(input("Enter audio url (or 0 to cancel): ")) 
+                    if is_valid_youtube_url(input_audio_url):
+                        download_audio(input_audio_url)
+                    elif input_audio_url == "0":
+                        break
+                    else:
+                        print_error("Invalid youtube url")
+                    
             elif user_input == 3:
                 print("Exiting...")
                 sys.exit(0)
