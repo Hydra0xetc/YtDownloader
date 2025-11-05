@@ -39,15 +39,38 @@ def get_another_info(dict_data: dict):
         print_error("Invalid or empty data provided")
         return
     try:
-        print("—" * 60)
-        print(f"yt-dlp version:{dict_data
-        .get('_version', {})
-        .get('version', 'unknown')}")
-        print(f"\nchannel: {dict_data.get('channel', 'unknown')}")
-        print(f"title: {dict_data.get('title', 'unknown')}")
-        print(f"duration: {dict_data.get('duration_string', 'unknown')}")
-        print("—" * 60)
-
+        info_data = [
+            ("Version", dict_data.get('_version', {}).get('version', 'Unknown')),
+            ("Channel", dict_data.get('channel', 'Unknown')),
+            ("Title", dict_data.get('title', 'Unknown')),
+            ("Duration", dict_data.get('duration_string', 'Unknown')),
+            ("Uploader", dict_data.get('uploader', 'Unknown')),
+            ("URL", dict_data.get('webpage_url', 'Unknown'))
+        ]
+        
+        max_label_len = max(len(label) for label, _ in info_data)
+        max_value_len = max(len(str(value)) for _, value in info_data)
+        
+        box_width = max(50, max_label_len + max_value_len + 7)
+        
+        def truncate_text(text, max_len):
+            text = str(text)
+            if len(text) > max_len:
+                return text[:max_len-3] + "..."
+            return text
+        
+        print("┌" + "─" * box_width + "┐")
+        print("│" + "VIDEO INFORMATION".center(box_width) + "│")
+        print("├" + "─" * box_width + "┤")
+        
+        for label, value in info_data:
+            display_value = truncate_text(value, box_width - max_label_len - 5)
+            
+            line = f"│ {label:<{max_label_len}} : {display_value}"
+            line += " " * (box_width - len(line) + 1) + "│"
+            print(line)
+        
+        print("└" + "─" * box_width + "┘")
     except Exception as e:
         print_error(e)
 
