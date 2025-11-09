@@ -24,9 +24,9 @@ def run_yt_dlp_command(command):
         result = subprocess.run(command, capture_output=True, text=True, check=True)
         return result.stdout, None
     except subprocess.CalledProcessError as e:
-        return None, f"yt-dlp error: {e.stderr}"
+        return None, print_error(f"yt-dlp: {e}")
     except Exception as e:
-        return None, f"Unexpected error: {str(e)}"
+        return None, print_error(e)
 
 def get_info(url):
     command = ["yt-dlp", url, "--dump-json"]
