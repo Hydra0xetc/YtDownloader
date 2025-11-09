@@ -24,7 +24,7 @@ A simple, command-line tool to download videos and audio from YouTube.
 
 2.  Navigate to the project directory:
     ```bash
-    cd YtDownloader/python
+    cd YtDownloader/
     ```
 
 3.  Install the required Python packages:
