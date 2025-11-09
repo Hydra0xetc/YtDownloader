@@ -16,13 +16,17 @@ Before running this script, you need to have the following installed on your sys
 1.  **Python 3**: The script is written in Python and requires a Python 3 environment.
 2.  **yt-dlp**: A powerful command-line program to download videos from YouTube and other sites.
     -   Installation: `pip install yt-dlp`
-3.  **FFmpeg**: A complete, cross-platform solution to record, convert and stream audio and video. `yt-dlp` requires it for merging video and audio streams.
-    -   Installation: Use your system's package manager (e.g., `apt install ffmpeg`, `brew install ffmpeg`).
 
 ## How to Use
 
 1.  Run the main script:
     ```bash
+    git clone https://github.com/Hydra0xetc/yt-downloader.git
+
+    cd yt-downloader/
+
+    pip install -r requirements.txt
+        
     python main.py
     ```
 2.  Follow the on-screen prompts to:

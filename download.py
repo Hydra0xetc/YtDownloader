@@ -169,6 +169,7 @@ def get_best_formats(formats, extensions, is_audio=False):
         formats_list.sort(key=lambda x: (
             0 if 'https' in x['protocol'] or 'http' in x['protocol'] else 1
         ))
+            
         available_formats.append(formats_list[0])
     
     # Sort by quality (bitrate for audio, height for video)
