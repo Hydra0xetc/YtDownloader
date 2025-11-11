@@ -223,7 +223,11 @@ def get_user_choice(formats):
             print_red("Operation cancelled by user")
             return None
 
-def download_content(url, selected_format, content_type="Video"):
+def download_content(
+        url,
+        selected_format,
+        content_type="Video"
+    ):
     # Ensure download directory exists
     if not ensure_directory_exists(BASE_DOWNLOAD_DIR):
         return False
@@ -288,7 +292,11 @@ def download_video(url):
     # Get user choice and download
     choice_idx = get_user_choice(available_formats)
     if choice_idx is not None:
-        download_content(url, available_formats[choice_idx], "Video")
+        download_content(
+            url,
+            available_formats[choice_idx],
+            "Video"
+        )
 
 def download_audio(url):
     start_loading()
@@ -316,4 +324,8 @@ def download_audio(url):
     # Get user choice and download
     choice_idx = get_user_choice(available_formats)
     if choice_idx is not None:
-        download_content(url, available_formats[choice_idx], "Audio")
+        download_content(
+            url,
+            available_formats[choice_idx],
+            "Audio"
+        )
