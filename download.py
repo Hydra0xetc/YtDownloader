@@ -1,23 +1,15 @@
 import subprocess
 import wcwidth
-from log import print_error, print_red, print_success
+from log import print_error, print_red, print_success, print_warning
 import os
 import json
 from loading import start_loading, stop_loading
 
 # Constants
-BASE_DOWNLOAD_DIR = "/sdcard/Download/YouTubeDownload/"
 VIDEO_EXTENSIONS = ["webm", "mp4", "mkv", "mov"]
 AUDIO_EXTENSIONS = ["m4a", "mp3", "opus", "webm", "aac"]
 MAX_BOX_WIDTH = 80
-
-def ensure_directory_exists(path: str) -> bool:
-    try:
-        os.makedirs(path, exist_ok=True)
-        return True
-    except OSError as e:
-        print_error(f"Failed to create directory {path}: {e}")
-        return False
+THUMBNAIL_EMBED_SUPPORTED_EXTENSIONS = ["mp3", "mkv", "mka", "ogg", "opus", "flac", "m4a", "mp4", "m4v", "mov"]
 
 def run_yt_dlp_command(command):
     try:
@@ -226,12 +218,18 @@ def get_user_choice(formats):
 def download_content(
         url,
         selected_format,
-        content_type="Video"
+        content_type="Video",
+        config=None
     ):
-    # Ensure download directory exists
-    if not ensure_directory_exists(BASE_DOWNLOAD_DIR):
+    if config is None:
+        print_error("Configuration not provided to download_content.")
         return False
     
+    download_path = config.get("download_path", "/sdcard/Download/YouTubeDownload/")
+    filename_template = config.get("filename_template", "%(title)s.%(ext)s")
+    embed_thumbnail = config.get("embed_thumbnail", True)
+    embed_metadata = config.get("embed_metadata", True)
+
     # Display selection info
     if content_type == "Audio":
         bitrate = f"{int(selected_format['abr'])}kbps" if selected_format['abr'] > 0 else 'unknown'
@@ -243,18 +241,25 @@ def download_content(
     download_command = [
         "yt-dlp",
         "-c",
-        "--embed-metadata",
-        "--embed-thumbnail",
         url,
         "-f", selected_format['format_id'],
-        "-o", f"{BASE_DOWNLOAD_DIR}%(title)s.%(ext)s"
+        "-o", os.path.join(download_path, filename_template)
     ]
+
+    if embed_metadata:
+        download_command.append("--embed-metadata")
+    
+    # Only embed thumbnail if the format supports it
+    if embed_thumbnail and selected_format['ext'] in THUMBNAIL_EMBED_SUPPORTED_EXTENSIONS:
+        download_command.append("--embed-thumbnail")
+    elif embed_thumbnail and selected_format['ext'] not in THUMBNAIL_EMBED_SUPPORTED_EXTENSIONS:
+        print_warning(f"Thumbnail embedding not supported for .{selected_format['ext']} format. Skipping.")
     
     # Execute download
     try:
         result = subprocess.run(download_command, check=True)
         if result.returncode == 0:
-            print_success(f"Downloaded {content_type} to {BASE_DOWNLOAD_DIR}")
+            print_success(f"Downloaded {content_type} to {download_path}")
             return True
         else:
             print_error("Download failed")
@@ -266,7 +271,11 @@ def download_content(
         print_red("Download cancelled by user")
         return False
 
-def download_video(url):
+def download_video(url, config=None):
+    if config is None:
+        print_error("Configuration not provided to download_video.")
+        return
+    
     start_loading()
     info = get_info(url)
     stop_loading()
@@ -295,10 +304,15 @@ def download_video(url):
         download_content(
             url,
             available_formats[choice_idx],
-            "Video"
+            "Video",
+            config
         )
 
-def download_audio(url):
+def download_audio(url, config=None):
+    if config is None:
+        print_error("Configuration not provided to download_audio.")
+        return
+    
     start_loading()
     info = get_info(url)
     stop_loading()
@@ -327,5 +341,6 @@ def download_audio(url):
         download_content(
             url,
             available_formats[choice_idx],
-            "Audio"
+            "Audio",
+            config
         )

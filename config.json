@@ -1,0 +1,14 @@
+{
+  "video": {
+    "download_path": "/sdcard/Download/YouTubeDownload/Video/",
+    "filename_template": "%(title)s - %(channel)s.%(ext)s",
+    "embed_thumbnail": true,
+    "embed_metadata": true
+  },
+  "audio": {
+    "download_path": "/sdcard/Download/YouTubeDownload/Audio/",
+    "filename_template": "%(title)s - %(channel)s.%(ext)s",
+    "embed_thumbnail": true,
+    "embed_metadata": true
+  }
+}

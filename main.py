@@ -5,7 +5,11 @@ from log import print_error, print_red, print_yellow, show_logo
 from download import download_video, download_audio
 import re
 import sys
-import shutil  
+import shutil
+from config import load_config, ensure_download_path_exists
+
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 
 def is_valid_youtube_url(url):
     if not url:
@@ -28,7 +32,12 @@ def main():
         print_error("yt-dlp not found, install it firts with: pip install yt-dlp")
         sys.exit(127)
     
-    os.system("clear")
+    config = load_config()
+    if not ensure_download_path_exists(config):
+        print_error("Download path does not exist or could not be created. Exiting.")
+        sys.exit(1)
+
+    clear_screen()
     show_logo()
     print("Version: 1.1.0") # version
     while True:
@@ -41,7 +50,7 @@ def main():
             user_input = int(input("Select download method: "))
 
             if user_input == 1:
-                os.system("clear")
+                clear_screen()
                 show_logo()
                 while True:
                     print("╭" + "─" * 34 + "╮")
@@ -49,16 +58,16 @@ def main():
                     print("╰" + "─" * 34 + "╯")
                     input_video_url = str(input("Enter The Url: ")).strip()
                     if is_valid_youtube_url(input_video_url):
-                        download_video(input_video_url)
+                        download_video(input_video_url, config['video'])
                     elif input_video_url == "0":
-                        os.system("clear")
+                        clear_screen()
                         show_logo()
                         break
                     else:
                         print_error(f"'{input_video_url}' Is not a valid youtube url")
 
             elif user_input == 2:
-                os.system("clear")
+                clear_screen()
                 show_logo()
                 while True:
                     print("╭" + "─" * 34 + "╮")
@@ -66,9 +75,9 @@ def main():
                     print("╰" + "─" * 34 + "╯")
                     input_audio_url = str(input("Enter The Url: ")).strip()
                     if is_valid_youtube_url(input_audio_url):
-                        download_audio(input_audio_url)
+                        download_audio(input_audio_url, config['audio'])
                     elif input_audio_url == "0":
-                        os.system("clear")
+                        clear_screen()
                         show_logo()
                         break
                     else:
